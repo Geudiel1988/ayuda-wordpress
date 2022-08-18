@@ -426,3 +426,70 @@ $idPage = get_the_ID();
 
 <?php
 get_footer();
+
+#functions
+add_action( 'widgets_init', 'rosa_widgets_init' );
+
+if( function_exists('acf_add_options_page') ) {
+	
+	acf_add_options_page(array(
+		'page_title' 	=> 'Opciones generales',
+		'menu_title'	=> 'Opciones generales',
+		'menu_slug' 	=> 'opciones',
+		'capability'	=> 'edit_posts',
+		'redirect'		=> false
+	));
+
+}
+/**
+ * Polylang Shortcode - https://wordpress.org/plugins/polylang/
+ * Add this code in your functions.php
+ * Put shortcode [polylang_langswitcher] to post/page for display flags
+ *
+ * @return string
+ */
+function custom_polylang_langswitcher() {
+	$output = '';
+	if ( function_exists( 'pll_the_languages' ) ) {
+		$args   = [
+			'show_flags' => 0,
+			'show_names' => 1,
+			'echo'       => 0,
+		];
+		$output = '<ul class="polylang_langswitcher">'.pll_the_languages( $args ). '</ul>';
+	}
+
+	return $output;
+}
+
+add_shortcode( 'polylang_langswitcher', 'custom_polylang_langswitcher' );
+
+/**
+ * Enqueue scripts and styles.
+ */
+function rosa_scripts() {
+	wp_enqueue_style( 'rosa-style', get_stylesheet_uri(), array(), _S_VERSION );
+	wp_enqueue_style( 'rosa-bootstrap-css', get_template_directory_uri().'/vendor/bootstrap/css/bootstrap.min.css', array(), _S_VERSION );
+	wp_enqueue_style( 'rosa-acordion-css', get_template_directory_uri().'/assets/js/acordion/dist/css/accordion-slider.min.css', array(), _S_VERSION );
+
+	wp_enqueue_style( 'rosa-main-slick-css', get_template_directory_uri().'/assets/js/slick/slick.css', array(), _S_VERSION );
+	wp_enqueue_style( 'anv-style-slick-theme', get_template_directory_uri().'/assets/js/slick/slick-theme.css' );
+	wp_enqueue_style( 'rosa-main-css', get_template_directory_uri().'/assets/css/main.css', array(), _S_VERSION );
+	wp_enqueue_style( 'rosa-main-responsive-css', get_template_directory_uri().'/assets/css/main-responsive.css', array(), _S_VERSION );
+
+	
+	wp_style_add_data( 'rosa-style', 'rtl', 'replace' );
+
+
+	wp_enqueue_script( 'rosa-jquery', 'https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js', array(), _S_VERSION, true );
+	wp_enqueue_script( 'rosa-navigation', get_template_directory_uri() . '/js/navigation.js', array(), _S_VERSION, true );
+	wp_enqueue_script( 'rosa-bootstrap-js', get_template_directory_uri() . '/vendor/bootstrap/js/bootstrap.min.js', array(), _S_VERSION, true );
+	wp_enqueue_script( 'rosa-slick-js', get_template_directory_uri() . '/assets/js/slick/slick.min.js', array(), _S_VERSION, true );
+	wp_enqueue_script( 'rosa-acordion-js', get_template_directory_uri() . '/assets/js/acordion/dist/js/jquery.accordionSlider.min.js', array(), _S_VERSION, true );
+	wp_enqueue_script( 'rosa-main-js', get_template_directory_uri() . '/assets/js/main.js', array(), _S_VERSION, true );
+
+	if ( is_singular() && comments_open() && get_option( 'thread_comments' ) ) {
+		wp_enqueue_script( 'comment-reply' );
+	}
+}
+
