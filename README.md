@@ -1,6 +1,19 @@
 # ayuda-wordpress
 ayudas codigo wordpres php
 
+#header1
+<div class="social-media">
+		<?php if( have_rows('redes_sociales','option') ): ?>
+            <ul id="social-media">
+            <?php while( have_rows('redes_sociales','option') ): the_row(); ?>
+                <li class="item-social-media">
+                    <a href="<?php the_sub_field('link') ?>" target="_blank"> <?php the_sub_field('icono'); ?>a </a>
+                </li>
+            <?php endwhile; ?>
+            </ul>
+        <?php endif; ?> 
+		</div>
+
 #header
 	</div><!-- .site-branding -->
 		<div class="social-media">
